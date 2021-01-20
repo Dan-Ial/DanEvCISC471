@@ -1,5 +1,5 @@
 #Homework 1
-#By: Evelyn Yach (20071956)
+#By: Evelyn Yach (20071956)& Daniel Oh (20063998)
 #2021.01.19
 
 ### 1.1 Frequent k-mer ###
@@ -46,7 +46,7 @@ def frequent_k_mer(text, k):
     #return frequentPatterns
     return fp
 
-
+### 1.1 Helper Functions ###
 def PatternCount(text, pattern):
     #set num = 0
     num = 0
@@ -66,42 +66,84 @@ def PatternCount(text, pattern):
     return num
 
 
+
 ### 1.2 Frequent k-mer with mismatches ###
 def frequent_k_mer_mismatch(text, k, d):
     #set pattern to an array of strings length 0
+    pattern = []
 
-    #set freqMap to an empty map
+    #set freqMap to an empty map (dictionary)
+    freqMap = {}
 
     #set n to the length of text
+    n = len(text)
 
     #for i from 0 to n-k
+    end = k
+    for i in range(0, n-k):
 
         #upate pattern to text(i,k)
-
-        #update neighborhood to the output of function Neighboors
+        pattern = text[i:end]
+    
+        #update neighborhood to the output of function Neighbors
         #Neighboors accepts pattern and d as arguments
+        neighborhood = Neighbors(pattern, d)
 
         #for j from 0 to size of neighborhood - 1
-
+        for j in range(0, len(neighborhood)-1):
             #update neighbor to neighborhood[j]
+            neighbor = neighborhood[j]
 
             #if freqMap[neighbor] DNE
+            if neighbor not in freqMap:
                 #update freqMap[neighbor] to 1
+                freqMap[neighbor] = 1
             #else
+            else:
                 #update freqMap[neighbor] to freqMap[neighbor] + 1
+                freqMap[neighbor] = freqMap[neighbor] + 1
+
+        end = end + 1
 
     #set m to MaxMap(freqMap)
+    m = MaxMap(freqMap)
 
     #for every key pattern in freqMap
+    for key in freqMap:
 
         #if freqMap[pattern] = m
+        if freqMap[pattern] == m:
             #append pattern to patterns
+            patterns.append(pattern)
 
     #return patterns
     return patterns
 
 
-#main driver function
+### 1.2 Helper Functions ###
+def Neighbors(pattern, d):
+    #acceptable bases
+    bases = "ATCG"
+    
+    #check if d is 0
+    if d == 0:
+        return [pattern]
+
+    #recursion step
+    r2 = Neighbors(pattern[1:], d-1)
+
+    r = [b + r3 for r3 in r2 for b in bases if b != pattern[0]]
+
+    if d < len(pattern):
+        #another recursion step
+        r2 = Neighbors(pattern[1:], d)
+
+        r = r + [pattern[0] + r3 for r3 in r2]
+
+    return r
+
+
+### Main Driver Function ###
 def main():
     fkmer = frequent_k_mer("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4)
     print(fkmer)
@@ -110,3 +152,4 @@ def main():
     print(fmismatch)
 
 main()
+

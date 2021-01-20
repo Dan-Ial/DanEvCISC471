@@ -1,2 +1,2 @@
-CISC 471 assignment 1
+CISC 471 assignments
 Authors: Daniel Oh, Evelyn Yach

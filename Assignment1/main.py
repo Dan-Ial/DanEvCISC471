@@ -4,6 +4,10 @@
 
 ### 1.1 Frequent k-mer ###
 def frequent_k_mer(text, k):
+    # error checking
+    if text == "":
+        return []
+
     #update frequentPatterns to an empty set
     frequentPatterns = []
 
@@ -69,87 +73,94 @@ def PatternCount(text, pattern):
 
 ### 1.2 Frequent k-mer with mismatches ###
 def frequent_k_mer_mismatch(text, k, d):
-    #set pattern to an array of strings length 0
-    pattern = []
+    # error checking
+    if text == "":
+        return []
 
-    #set freqMap to an empty map (dictionary)
-    freqMap = {}
+    # first, make a dictionary of all possible k length strings
+    possible_substrings = []
+    for i in range(len(text)-k+1):
+        possible_substrings.append(text[i:i+k])
 
-    #set n to the length of text
-    n = len(text)
+    freq_map = {}
+    for p in possible_substrings:
+        freq_map[p] = 0
 
-    #for i from 0 to n-k
-    end = k
-    for i in range(0, n-k):
+    # iterate through each possible string
+    for substring in possible_substrings:
+        possible_alt_substring = Neighbors(substring, d)  # generate a set of all possible polymorphed strings
+        for alt_substring in possible_alt_substring:  # iterate through all the polymorphed strings
+            if alt_substring in text:  # check that the polymorphed substring exists
+                freq_map[alt_substring] += 1
 
-        #upate pattern to text(i,k)
-        pattern = text[i:end]
-    
-        #update neighborhood to the output of function Neighbors
-        #Neighboors accepts pattern and d as arguments
-        neighborhood = Neighbors(pattern, d)
+    # find the most frequent occurrences
+    m = max(freq_map.values())
+    return_list = []
+    for key in freq_map:
+        if freq_map[key] == m:
+            return_list.append(key)
 
-        #for j from 0 to size of neighborhood - 1
-        for j in range(0, len(neighborhood)-1):
-            #update neighbor to neighborhood[j]
-            neighbor = neighborhood[j]
-
-            #if freqMap[neighbor] DNE
-            if neighbor not in freqMap:
-                #update freqMap[neighbor] to 1
-                freqMap[neighbor] = 1
-            #else
-            else:
-                #update freqMap[neighbor] to freqMap[neighbor] + 1
-                freqMap[neighbor] = freqMap[neighbor] + 1
-
-        end = end + 1
-
-    #set m to MaxMap(freqMap)
-    m = MaxMap(freqMap)
-
-    #for every key pattern in freqMap
-    for key in freqMap:
-
-        #if freqMap[pattern] = m
-        if freqMap[pattern] == m:
-            #append pattern to patterns
-            patterns.append(pattern)
-
-    #return patterns
-    return patterns
+    return return_list
 
 
 ### 1.2 Helper Functions ###
 def Neighbors(pattern, d):
-    #acceptable bases
+    # acceptable bases
     bases = "ATCG"
-    
-    #check if d is 0
+
+    # check if d is 0
     if d == 0:
-        return [pattern]
+        return {pattern}
 
-    #recursion step
-    r2 = Neighbors(pattern[1:], d-1)
+    # recursion step
+    r2 = Neighbors(pattern[1:], d - 1)
 
-    r = [b + r3 for r3 in r2 for b in bases if b != pattern[0]]
+    r = [b + r3 for r3 in r2 for b in bases]
 
     if d < len(pattern):
-        #another recursion step
+        # another recursion step
         r2 = Neighbors(pattern[1:], d)
 
         r = r + [pattern[0] + r3 for r3 in r2]
 
-    return r
+    return set(r)
 
 
-### Main Driver Function ###
-def main():
+'''
+Unit Tests
+'''
+def test_k_mer_positive():
+    """
+    testing frequent_k_mer multiple results
+    """
     fkmer = frequent_k_mer("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4)
-    print(fkmer)
+    print("test_k_mer_positive passed: " + str(fkmer == ['GCAT', 'CATG']))
 
-    fmismmatch = frequent_k_mer_mismatch("ACTATGCATACTATCGGGAACT", 5, 1)
-    print(fmismatch)
 
-main()
+def test_k_mer_negative():
+    """
+    testing frequent_k_mer no results
+    """
+    fkmer = frequent_k_mer("", 4)
+    print("test_k_mer_negative passed: " + str(fkmer == []))
 
+def test_k_mer_mismatch_positive():
+    """
+    testing frequent_k_mer_mismatch multiple results
+    """
+    fkmer = frequent_k_mer_mismatch("ACTATGCATACTATCGGGAACT", 5, 1)
+    print("test_k_mer_mismatch_positive passed: " + str(fkmer == ['ACTAT', 'CTATG', 'CTATC']))
+
+def test_k_mer_mismatch_negative():
+    """
+    testing frequent_k_mer_mismatch no results
+    """
+    fkmer = frequent_k_mer_mismatch("", 5, 1)
+    print("test_k_mer_mismatch_negative passed: " + str(fkmer == []))
+
+### Running Test Cases ###
+if __name__ == '__main__':
+    test_k_mer_positive()
+    test_k_mer_negative()
+    test_k_mer_mismatch_positive()
+    test_k_mer_mismatch_negative()

@@ -75,18 +75,16 @@ def frequent_k_mer_mismatch(text, k, d):
     #set freqMap to an empty map (dictionary)
     freqMap = {}
 
-    #set n to the length of text
-    n = len(text)
-
-    #for i from 0 to n-k
+    #for i from 0 to len(text)-k
     end = k
-    for i in range(0, n-k):
+    for i in range(0, len(text)-k):
 
         #upate pattern to text(i,k)
         pattern = text[i:end]
     
         #update neighborhood to the output of function Neighbors
         #Neighboors accepts pattern and d as arguments
+        #finds every instance of pattern with k differences
         neighborhood = Neighbors(pattern, d)
 
         #for j from 0 to size of neighborhood - 1
@@ -94,27 +92,31 @@ def frequent_k_mer_mismatch(text, k, d):
             #update neighbor to neighborhood[j]
             neighbor = neighborhood[j]
 
-            #if freqMap[neighbor] DNE
+            #if freqMap[neighbor] DNE, add it
             if neighbor not in freqMap:
                 #update freqMap[neighbor] to 1
                 freqMap[neighbor] = 1
-            #else
+            #else, increment by 1
             else:
                 #update freqMap[neighbor] to freqMap[neighbor] + 1
                 freqMap[neighbor] = freqMap[neighbor] + 1
 
         end = end + 1
 
+    print(freqMap)###
+    
     #set m to MaxMap(freqMap)
-    m = MaxMap(freqMap)
+    m = max(freqMap.values())
+
+    print(m)###
 
     #for every key pattern in freqMap
+    patterns = []
     for key in freqMap:
-
         #if freqMap[pattern] = m
-        if freqMap[pattern] == m:
+        if (freqMap[key] == m) and (key not in patterns):
             #append pattern to patterns
-            patterns.append(pattern)
+            patterns.append(key)
 
     #return patterns
     return patterns
@@ -132,7 +134,7 @@ def Neighbors(pattern, d):
     #recursion step
     r2 = Neighbors(pattern[1:], d-1)
 
-    r = [b + r3 for r3 in r2 for b in bases if b != pattern[0]]
+    r = [b + r3 for r3 in r2 for b in bases]
 
     if d < len(pattern):
         #another recursion step
@@ -148,8 +150,7 @@ def main():
     fkmer = frequent_k_mer("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4)
     print(fkmer)
 
-    fmismmatch = frequent_k_mer_mismatch("ACTATGCATACTATCGGGAACT", 5, 1)
+    fmismatch = frequent_k_mer_mismatch("ACTATGCATACTATCGGGAACT", 5, 1)
     print(fmismatch)
 
 main()
-

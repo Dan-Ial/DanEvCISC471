@@ -52,7 +52,7 @@ def eulerian_cycle(graph, random_start=True, choice_start=0):
     return path[::-1][2:]
 
 
-'''TEST CASES'''
+'''TEST CASES FOR EULERIAN CYCLE'''
 def test_eulerian_cycle_positive():
     """positive test case with rosalind data"""
     rosalind_graph = {
@@ -103,6 +103,7 @@ def test_eulerian_cycle_empty():
 
 
 def eulerian_cycle_main():
+    print("EULERIAN CYCLE TEST CASES\n")
     test_eulerian_cycle_positive()
     test_eulerian_cycle_negative()
     test_eulerian_cycle_empty()
@@ -117,6 +118,17 @@ def contigs(input_data):
     :param input_data: A list of kmer strings
     :return: List of contigs found from the kmers
     """
+    # check if input_data is valid, input_data must be a list of strings
+    if isinstance(input_data, list):
+        for element in input_data:
+            if not isinstance(element, str):
+                return "Invalid input"
+    else:
+        return "Invalid input"
+
+
+    if len(input_data) == 0:
+        return []
 
     graph, contigs_list, to_remove_list = {}, [], []
 
@@ -136,22 +148,13 @@ def contigs(input_data):
 
                 for vertex_prime in graph[vertex]:  # going through each vertex that branches out
                     non_branching_path = vertex + vertex_prime[-1]
-                    # to_remove_list.append(vertex)  # remove vertex
 
                     # while we're still on a straight path
                     while num_of_inputs(vertex_prime, graph) == 1 and num_of_outputs(vertex_prime, graph) == 1:
-
-
-                        # for vertex_prime_prime in graph[vertex_prime]:
                         non_branching_path = non_branching_path + graph[vertex_prime][0][-1]
-                        # to_remove_list.append(vertex_prime)
                         vertex_prime = graph[vertex_prime][0]
 
-                    contigs_list.append(non_branching_path)
-
-    # for to_remove in to_remove_list:
-    #     if to_remove in graph:
-    #         del graph[to_remove]
+                    contigs_list.append(non_branching_path)  # append a new contig
 
     return contigs_list
 
@@ -186,12 +189,51 @@ def num_of_outputs(vertex, graph):
     return 0
 
 
-def contig_main():
+'''TEST CASES FOR CONTIGS'''
+def test_contigs_positive():
+    """positive test case with rosalind data"""
     rosalind_data = ['ATG', 'ATG', 'TGT', 'TGG', 'CAT', 'GGA', 'GAT', 'AGA']
     output = contigs(rosalind_data)
-    print(output)
+    print("Testing on the rosalind dataset")
+    print("Input: " + str(rosalind_data))
+    # note: the rosalind site dataset has the sample output in a different order, with the same elements
+    print("Should Be: \"['ATG', 'ATG', 'TGT', 'TGGA', 'CAT', 'GAT', 'AGA']\"")
+    print("Output: \"" + str(output) + "\"")
+    print("Test Passed: " + str(['ATG', 'ATG', 'TGT', 'TGGA', 'CAT', 'GAT', 'AGA'] == output))
+    print()
+
+
+def test_contigs_negative():
+    """negative test case"""
+    input_data = 'Not A Valid List'
+    output = contigs(input_data)
+    print("Testing on an invalid input")
+    print("Input: " + str(input_data))
+    print("Should Be: \"Invalid input\"")
+    print("Output: \"" + str(output) + "\"")
+    print("Test Passed: " + str("Invalid input" == output))
+    print()
+
+
+def test_contigs_empty():
+    """negative test case"""
+    input_data = []
+    output = contigs(input_data)
+    print("Testing on an empty list")
+    print("Input: " + str(input_data))
+    print("Should Be: \"[]\"")
+    print("Output: \"" + str(output) + "\"")
+    print("Test Passed: " + str([] == output))
+    print()
+
+
+def contig_main():
+    print("CONTIG TEST CASES\n")
+    test_contigs_positive()
+    test_contigs_negative()
+    test_contigs_empty()
 
 
 if __name__ == '__main__':
-    # eulerian_cycle_main()
+    eulerian_cycle_main()
     contig_main()

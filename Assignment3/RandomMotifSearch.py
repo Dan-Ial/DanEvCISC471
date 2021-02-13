@@ -22,9 +22,8 @@ import random
 
 def Profile(best_motifs):
     profile = []
-    
     for i in range(len(best_motifs[0])):
-        A, T, G, C = 0, 0, 0, 0
+        A, T, G, C = 1, 1, 1, 1
         for motif in best_motifs:
             if motif[i] == 'A':
                 A += 1
@@ -54,6 +53,7 @@ def Motifs(profile, Dna):
 
         #begin calculating the most probable pattern
         for i in range(len(dna_str) - k + 1):
+            
             s = dna_str[i:i + k]
             
             #calculate probability
@@ -70,12 +70,13 @@ def Motifs(profile, Dna):
 
             #determine if the new probability is better then the old one  
             if probability > best_probability:
-                best_pattern = dna_str
+                best_pattern = s
                 best_probability = probability
 
         motifs.append(best_pattern)
 
     return motifs
+    
 
 def HammingDistance(s1, s2):
     count = 0
@@ -86,7 +87,8 @@ def HammingDistance(s1, s2):
 
 def Score(motifs):
     #beginning similar to the Profile function
-    ATGC = ''
+    #find a consensus
+    consensus = ''
     for i in range(len(motifs[0])):
         A, T, G, C = 0, 0, 0, 0
         for motif in motifs:
@@ -101,25 +103,25 @@ def Score(motifs):
                 C += 1
 
         #find max
-        if A >= max(T, G, C):
-            ATGC += "A"
-        elif T >= max(A, G, C):
-            ATGC += "T"
-        elif G >= max(A, T, C):
-            ATGC += "G"
-        elif C >= max(A, T, G):
-            ATGC += "C"
+        if A >= max(C, G, T):
+            consensus += "A"
+        elif T >= max(C, G, A):
+            consensus += "T"
+        elif G >= max(C, A, T):
+            consensus += "G"
+        elif C >= max(A, G, T):
+            consensus += "C"
 
     #calculate the score based on the Hamming Distance
     score = 0
     for motif in motifs:
-        score += HammingDistance(ATGC, motif)
+        score += HammingDistance(consensus, motif)
 
     return score
             
 
 def RandomizedMotifSearch(Dna, k, t):
-    #randomly select k-mers Motifs
+    #randomly select the best k-mers motifs
     best_motifs = []
     for i in Dna:
         position = random.randint(0, len(i) - k)
@@ -134,6 +136,7 @@ def RandomizedMotifSearch(Dna, k, t):
         #Motifs ← Motifs(Profile, Dna)
         motifs = Motifs(profile, Dna)
 
+        #want the one with the  lower score
         #if Score(Motifs) < Score(BestMotifs)
         if Score(motifs) < Score(best_motifs):
             #BestMotifs ← Motifs
@@ -152,17 +155,24 @@ if __name__ == '__main__':
     t = 5   #len(rosalind_Dna)
 
     #iterate thru
+    #find all the best motifs from the data
     best_motifs = []
-    iterator = 0
     for i in range(t):
         best_motifs.append(rosalind_Dna[i][:k])
+
+    #Because we want a collection BestMotifs resulting from running
+    #RandomizedMotifSearch(Dna, k, t) 1000 times. we iterate
+    iterator = 0
     while iterator < 1000:
+        #bread and butter right there
         motifs = RandomizedMotifSearch(rosalind_Dna, k, t)
+        
         if Score(motifs) < Score(best_motifs):
             best_motifs = motifs
+            
         iterator += 1
 
-    #best_motifs = RandomizedMotifSearch(rosalind_Dna, k, t)
+    #our final result will be stored in best_motifs
 
     #print
     for motif in best_motifs:

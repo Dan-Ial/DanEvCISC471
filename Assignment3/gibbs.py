@@ -20,7 +20,7 @@ def gibbs_sampler(dna, k, t, N):
         return []
     # check if we have any invalid characters and differing dna lengths
     for dna_string in dna:
-        if len(dna_string) != dna[0]:
+        if len(dna_string) != len(dna[0]):
             return []
         for char in dna_string:
             if char not in 'ACTG':
@@ -106,6 +106,6 @@ if __name__ == '__main__':
                          'TAGTACCGAGACCGAAAGAAGTATACAGGCGT',
                          'TAGATCAAGTTTCAGGTGCACGTCGGTGAACC',
                          'AATCCACCAGCTCCACGTGCAATGTTGGCCTA']
-    print(gibbs_sampler(rosalind_dna_data, 8, 5, 100))
+    print(gibbs_sampler(rosalind_dna_data, 8, 5, 1000))
 
 # ['TCTCGGGG', 'GAGGTATG', 'AAAGAAGT', 'CAAGTTTC', 'AATGTTGG']

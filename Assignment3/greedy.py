@@ -21,7 +21,7 @@ def greedy_motif_search(dna, k, t):
         return []
     # check if we have any invalid characters and differing dna lengths
     for dna_string in dna:
-        if len(dna_string) != dna[0]:
+        if len(dna_string) != len(dna[0]):
             return []
         for char in dna_string:
             if char not in 'ACTG':

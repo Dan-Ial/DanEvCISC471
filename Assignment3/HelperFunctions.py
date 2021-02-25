@@ -1,9 +1,16 @@
+"""
+Homework 3
+By: Evelyn Yach (20071956) & Daniel Oh (20063998)
+2021.02.25
+"""
+
+
 def create_profile(motifs):
-    '''
+    """
     creates a profile from a list of motifs
     :param motifs: a list of motifs
     :return: the profile
-    '''
+    """
     profile = {'A': [], 'G': [], 'T': [], 'C': []}
     # we iterate through columns so that each element of profile is the same len as motifs[0]
     for i in range(len(motifs[0])):
@@ -28,20 +35,20 @@ def create_profile(motifs):
 
 
 def find_most_probable_profile(dna_string, profile, k):
-    '''
+    """
     returns the most probable profile
     :param dna_string: a string of dna
     :param profile: a profile
     :param k: the k parameter
     :return: most probable profile
-    '''
+    """
     letter = [[] for i in range(k)]
     hamm_dict = {}
 
     # construct a list of all kmer motifs in the first string of dna
     kmer_motifs, dna_index = [], 0
     while dna_index + k < len(dna_string) + 1:
-        kmer_motifs.append(dna_string[dna_index:dna_index+k])
+        kmer_motifs.append(dna_string[dna_index:dna_index + k])
         dna_index += 1
 
     for a in range(k):
@@ -66,11 +73,11 @@ def find_most_probable_profile(dna_string, profile, k):
 
 
 def score(motifs):
-    '''
+    """
     calculates the score for motifs
     :param motifs: the motifs we will be scoring
     :return: the score as a float
-    '''
+    """
     consensus = generate_consensus(motifs)
     score = 0.0
     for motif in motifs:
@@ -80,11 +87,11 @@ def score(motifs):
 
 
 def generate_consensus(motifs):
-    '''
+    """
     generates a sister string of consensus for a motif
     note: this is only used in the score() function
     :param motif: the motifs to generate a consensus on
-    '''
+    """
     consensus = ""
     for i in range(len(motifs[0])):
         a, g, t, c = 0, 0, 0, 0

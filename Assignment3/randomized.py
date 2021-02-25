@@ -19,6 +19,8 @@ RANDOMIZEDMOTIFSEARCH(Dna, k, t)
 """
 
 import random
+import math
+import operator
 
 def Profile(best_motifs):
     profile = []
@@ -145,15 +147,8 @@ def RandomizedMotifSearch(Dna, k, t):
         else:
             #return BestMotifs
             return best_motifs
-            
-     
-if __name__ == '__main__':
-    rosalind_Dna = ["CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA","GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
-                    "TAGTACCGAGACCGAAAGAAGTATACAGGCGT","TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
-                    "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"]
-    k = 8
-    t = 5   #len(rosalind_Dna)
 
+def IterativeRandomizedMotifSearch(rosalind_Dna, k, t):
     #iterate thru
     #find all the best motifs from the data
     best_motifs = []
@@ -173,8 +168,19 @@ if __name__ == '__main__':
         iterator += 1
 
     #our final result will be stored in best_motifs
+    return best_motifs
+            
+"""   
+if __name__ == '__main__':
+    rosalind_Dna = ["CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA","GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG",
+                    "TAGTACCGAGACCGAAAGAAGTATACAGGCGT","TAGATCAAGTTTCAGGTGCACGTCGGTGAACC",
+                    "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"]
+    k = 8
+    t = 5   #len(rosalind_Dna)
+
+    best_motifs = IterativeRandomizedMotifSearch(rosalind_Dna, k, t)
 
     #print
     for motif in best_motifs:
         print(motif)
-    
+""" 

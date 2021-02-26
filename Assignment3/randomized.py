@@ -19,8 +19,6 @@ RANDOMIZEDMOTIFSEARCH(Dna, k, t)
 """
 
 import random
-import math
-import operator
 
 def Profile(best_motifs):
     profile = []

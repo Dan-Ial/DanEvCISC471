@@ -9,10 +9,6 @@ Unit Tests
         For
          RandomMotifSearch
 """
-
-import random
-import math
-import operator
 from randomized import Profile, Motifs, HammingDistance, Score, RandomizedMotifSearch, IterativeRandomizedMotifSearch
 
 #Unit Tests

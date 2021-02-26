@@ -19,7 +19,7 @@ def time_random(iterations):
     total_time = 0
     for i in range(iterations):
         start = time.time()
-        IterativeRandomizedMotifSearch(rosalind_dna_data, 8, 5)
+        IterativeRandomizedMotifSearch(rosalind_dna_data, 3, 5)
         end = time.time()
         total_time += end - start
     print("Time for random: " + str(total_time/iterations))
@@ -30,7 +30,7 @@ def time_gibbs(iterations):
     total_time = 0
     for i in range(iterations):
         start = time.time()
-        gibbs_sampler(rosalind_dna_data, 8, 5, 1000)
+        gibbs_sampler(rosalind_dna_data, 3, 5, 1000)
         end = time.time()
         total_time += end - start
     print("Time for gibbs: " + str(total_time/iterations))

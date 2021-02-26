@@ -1,3 +1,9 @@
+"""
+Homework 3
+By: Evelyn Yach (20071956) & Daniel Oh (20063998)
+2021.02.26
+"""
+
 from greedy import greedy_motif_search
 from randomized import IterativeRandomizedMotifSearch
 from gibbs import gibbs_sampler

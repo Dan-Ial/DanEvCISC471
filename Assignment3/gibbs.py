@@ -65,7 +65,7 @@ def profile_randomly_generated(dna_string, profile, k):
     # useful variable to determine how much our loops need to iterate
     iteration_range = len(dna_string) - k + 1
     # calculate the probabilities of each kmer
-    kmer_probabilities = [1 for x in range(iteration_range)]
+    kmer_probabilities = [1 for _ in range(iteration_range)]
 
     for i in range(iteration_range):
         for j in range(k):
@@ -94,10 +94,9 @@ def profile_randomly_generated(dna_string, profile, k):
     rand_kmer_selector = random.random()
     for i in range(iteration_range):
         # if this is the kmer our random number generator has selected
-        if rand_kmer_selector < kmer_probabilities[i]:
-            break
+        if rand_kmer_selector <= kmer_probabilities[i]:
+            return dna_string[i:i+k]
 
-    return dna_string[i:i+k]
 
 
 if __name__ == '__main__':
@@ -107,5 +106,3 @@ if __name__ == '__main__':
                          'TAGATCAAGTTTCAGGTGCACGTCGGTGAACC',
                          'AATCCACCAGCTCCACGTGCAATGTTGGCCTA']
     print(gibbs_sampler(rosalind_dna_data, 8, 5, 1000))
-
-# ['TCTCGGGG', 'GAGGTATG', 'AAAGAAGT', 'CAAGTTTC', 'AATGTTGG']
